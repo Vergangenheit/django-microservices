@@ -3,7 +3,7 @@ import os
 import django
 from confluent_kafka import Consumer
 from confluent_kafka.cimpl import Message
-from secrets.secrets import sasl_password
+from app.secrets import sasl_password
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
 django.setup()
@@ -23,7 +23,7 @@ def main():
         'auto.offset.reset': 'earliest'
     })
 
-    consumer.subscribe(['admin_topic'])
+    consumer.subscribe(['ambassador_topic'])
 
     while True:
         msg: Message = consumer.poll(1.0)
@@ -41,7 +41,6 @@ def main():
                 value=msg.value(),
                 error=e,
             )
-
     consumer.close()
 
 

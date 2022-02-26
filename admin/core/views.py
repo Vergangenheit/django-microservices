@@ -1,3 +1,4 @@
+import json
 from typing import Dict
 from rest_framework import generics, mixins
 from rest_framework.request import Request
@@ -7,6 +8,7 @@ from .serializers import ProductSerializer, LinkSerializer, OrderSerializer
 from .models import Product, Link, Order
 from .services import UserService
 from django.db.models.query import QuerySet
+from app.producer import producer
 
 
 class RegisterAPIView(APIView):
@@ -87,26 +89,23 @@ class ProductGenericAPIView(
 
     def post(self, request: Request) -> Response:
         response: Response = self.create(request)
-        # for key in cache.keys('*'):
-        #     if 'products_frontend' in key:
-        #         cache.delete(key)
-        # cache.delete('products_backend')
+        json_data: str = json.dumps(response.data)
+        producer.produce('ambassador_topic', key='product_created', value=json_data)
+        producer.produce('checkout_topic', key='product_created', value=json_data)
         return response
 
     def put(self, request: Request, pk=None) -> Response:
         response: Response = self.partial_update(request, pk)
-        # for key in cache.keys('*'):
-        #     if 'products_frontend' in key:
-        #         cache.delete(key)
-        # cache.delete('products_backend')
+        json_data: str = json.dumps(response.data)
+        producer.produce('ambassador_topic', key='product_updated', value=json_data)
+        producer.produce('checkout_topic', key='product_updated', value=json_data)
         return response
 
     def delete(self, request: Request, pk=None) -> Response:
         response: Response = self.destroy(request, pk)
-        # for key in cache.keys('*'):
-        #     if 'products_frontend' in key:
-        #         cache.delete(key)
-        # cache.delete('products_backend')
+        json_data: str = json.dumps(response.data)
+        producer.produce('ambassador_topic', key='product_deleted', value=json_data)
+        producer.produce('checkout_topic', key='product_deleted', value=json_data)
         return response
 
 

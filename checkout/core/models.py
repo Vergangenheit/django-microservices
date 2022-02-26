@@ -3,6 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Product(models.Model):
+    id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000, null=True)
     image = models.CharField(max_length=255)
@@ -19,7 +20,6 @@ class Link(models.Model):
 
 
 class Order(models.Model):
-    id = models.IntegerField(primary_key=True)
     transaction_id = models.CharField(max_length=255, null=True)
     user_id = models.IntegerField()
     code = models.CharField(max_length=255)
@@ -31,6 +31,7 @@ class Order(models.Model):
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
     zip = models.CharField(max_length=255, null=True)
+    complete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -50,7 +51,6 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    id = models.IntegerField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     product_title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -59,6 +59,7 @@ class OrderItem(models.Model):
     ambassador_revenue = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
 class KafkaError(models.Model):
     key = models.CharField(max_length=255)

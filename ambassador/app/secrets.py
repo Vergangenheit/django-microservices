@@ -1,0 +1,2 @@
+stripe_api_key = 'sk_test_51KQXHCLakcD4aaGu2pCgfJQRit44Q9FXOncE1kQIZx8Ua6pfsPu1loJvH6K2SSrXdh0aSbrgpfggXRcBfL1tWazO0055H20POz'
+sasl_password = 'W1LgSsH0PmbVsI0J6l0ZthAGTEYIYojWH44+l1DcFcK/AG9vsRHra1RYwM/8wF5+'

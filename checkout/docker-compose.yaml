@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  checkout_backend:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8004:8000
+    depends_on:
+      - checkout_db
+    networks:
+      - checkout
+      - users
+
+  checkout_db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: checkout
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 33065:3306
+    volumes:
+      - .dbdata:/var/lib/mysql
+    networks:
+      - checkout
+
+  checkout_queue:
+    build: .
+    command: >
+      sh -c "python manage.py wait_for_db 
+      && python consumer.py"
+    depends_on:
+      - checkout_db
+    networks:
+      - checkout
+
+#  redis:
+#    image: redis
+#    ports:
+#      - 6379:6379
+#    networks:
+#      - monolith
+
+networks:
+  checkout:
+  users:
+    external:
+      name: users
