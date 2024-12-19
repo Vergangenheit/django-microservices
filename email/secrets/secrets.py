@@ -1,1 +1,0 @@
-sasl_password = 'W1LgSsH0PmbVsI0J6l0ZthAGTEYIYojWH44+l1DcFcK/AG9vsRHra1RYwM/8wF5+'
